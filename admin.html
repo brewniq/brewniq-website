@@ -116,8 +116,16 @@ body{background:var(--black);color:var(--text);font-family:'Syne',sans-serif;fon
       <div class="panel-sub" id="formSub">Fill in the details below to add a project to the portfolio.</div>
 
       <div class="firebase-banner" id="firebaseBanner">
-        <strong>⚙ Firebase Config Required</strong>
-        Open this file in a text editor and replace the <code>FIREBASE_CONFIG</code> placeholder near the bottom of the script with your actual Firebase config object. Projects will then sync live to your main site.
+        <strong>⚙ Firestore Rules — Fix Required if Save Fails</strong>
+        Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold)">Firebase Console</a> → Firestore Database → Rules tab → paste the rules below and click Publish:<br><br>
+        <code style="display:block;white-space:pre;margin-top:8px;">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}</code>
       </div>
 
       <div class="fg"><label>Project Name *</label><input type="text" id="f-name" placeholder="e.g. The Black Carafe"/></div>
@@ -299,7 +307,12 @@ window.saveProject = async function() {
     clearForm();
     await loadProjects();
   } catch(e) {
-    showStatus('Error: ' + e.message, true);
+    console.error('Firebase save error:', e);
+    const msg = e.code === 'permission-denied'
+      ? '🔒 Permission denied — go to Firebase Console → Firestore Database → Rules and set: allow read, write: if true;'
+      : ('Error: ' + (e.message || e.code || 'Unknown error'));
+    showStatus(msg, true);
+    alert('Save failed:\n\n' + msg + '\n\nCheck the browser Console (F12) for details.');
   }
   btn.textContent = editingId ? 'Update Project' : 'Save Project';
   btn.disabled = false;
@@ -341,7 +354,12 @@ window.deleteProject = async function(id, name) {
     showStatus('✓ Project deleted');
     await loadProjects();
   } catch(e) {
-    showStatus('Error: ' + e.message, true);
+    console.error('Firebase delete error:', e);
+    const msg = e.code === 'permission-denied'
+      ? '🔒 Permission denied — update Firestore Rules to allow write.'
+      : ('Error: ' + (e.message || e.code));
+    showStatus(msg, true);
+    alert('Delete failed:\n\n' + msg);
   }
 };
 
@@ -356,7 +374,8 @@ function showStatus(msg, isErr = false) {
   bar.style.display = 'block';
   bar.style.color = isErr ? 'var(--red)' : 'var(--gold)';
   bar.style.borderColor = isErr ? 'rgba(200,74,74,0.2)' : 'rgba(200,164,90,0.15)';
-  setTimeout(() => bar.style.display = 'none', 5000);
+  // Errors stay visible until dismissed; success hides after 5s
+  if (!isErr) setTimeout(() => bar.style.display = 'none', 5000);
 }
 </script>
 </body>
