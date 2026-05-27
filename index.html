@@ -400,99 +400,108 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:60px 4
   <div class="footer-bottom"><p>© 2025 <span class="gold">Brewniq</span>. All rights reserved.</p><p>Built with precision in Hyderabad 🖤</p></div>
 </footer>
 
-<button class="editor-fab" onclick="openEditor()" title="Edit Projects">✏️</button>
 
-<div class="editor-overlay" id="editorOverlay">
-  <div class="editor-modal">
-    <div class="editor-header"><h3>Project Editor</h3><button class="editor-close" onclick="closeEditor()">✕</button></div>
-    <div class="editor-tabs">
-      <button class="etab active" onclick="switchTab('add')">＋ Add Project</button>
-      <button class="etab" onclick="switchTab('manage')">Manage Projects</button>
-    </div>
-    <div class="tab-content active" id="tab-add">
-      <div class="eform-grid">
-        <div class="eform-group"><label>Project Name *</label><input type="text" id="f-name" placeholder="e.g. The Black Carafe"/></div>
-        <div class="eform-group"><label>Category Tag *</label><input type="text" id="f-tag" placeholder="e.g. Cafe &amp; Dining"/></div>
-        <div class="eform-group eform-full"><label>Short Description *</label><textarea id="f-desc" placeholder="Brief description of the project..."></textarea></div>
-        <div class="eform-group"><label>Live Website URL</label><input type="url" id="f-url" placeholder="https://yourclient.com"/></div>
-        <div class="eform-group"><label>Emoji Icon</label><input type="text" id="f-icon" placeholder="e.g. ☕  🛍  🏢  ✂️  🚀"/></div>
-        <div class="eform-group"><label>Card Accent Color</label>
-          <select id="f-color">
-            <option value="cafe">Warm Brown</option><option value="ecom">Deep Blue</option>
-            <option value="agency">Deep Purple</option><option value="salon">Amber</option>
-            <option value="startup">Teal Green</option><option value="resto">Deep Red</option>
-          </select>
+
+<script type="module">
+// ── Firebase config (same as admin.html) ──────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w",
+  authDomain: "brewniq-bef2c.firebaseapp.com",
+  projectId: "brewniq-bef2c",
+  storageBucket: "brewniq-bef2c.firebasestorage.app",
+  messagingSenderId: "618275666462",
+  appId: "1:618275666462:web:f5ec21bfcc76e4cd524c0f"
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
+
+// ── Nav / scroll / animations ──────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('open'));
+window.closeMobile = function(){ document.getElementById('mobileMenu').classList.remove('open'); };
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+window.handleSubmit = function(e){
+  e.preventDefault(); const b=e.target;
+  b.textContent='✓ Booking Received!'; b.style.background='#2a6a2a'; b.style.color='#fff';
+  setTimeout(()=>{b.textContent='Book Your Free Call ↗';b.style.background='';b.style.color='';},4000);
+};
+const sections=document.querySelectorAll('section[id]'), navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let c=''; sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)c=s.id;});
+  navLinks.forEach(a=>a.style.color=a.getAttribute('href')==='#'+c?'var(--gold)':'');
+});
+
+// ── Portfolio rendering ────────────────────────────────────────
+const COLORS = {
+  cafe:'background:linear-gradient(135deg,#0d0a06 0%,#1e1608 50%,#0d0a06 100%);',
+  ecom:'background:linear-gradient(135deg,#050d12 0%,#0c1e28 50%,#050d12 100%);',
+  agency:'background:linear-gradient(135deg,#0a050d 0%,#180c22 50%,#0a050d 100%);',
+  salon:'background:linear-gradient(135deg,#0d0a06 0%,#221808 50%,#0d0a06 100%);',
+  startup:'background:linear-gradient(135deg,#050d0a 0%,#0c2218 50%,#050d0a 100%);',
+  resto:'background:linear-gradient(135deg,#0d0808 0%,#220c0c 50%,#0d0808 100%);'
+};
+
+function renderPortfolio(projects) {
+  const grid = document.getElementById('portfolioGrid');
+  if (!projects.length) {
+    grid.innerHTML = '<div class="portfolio-empty"><span class="e-icon">🖼</span><p>No projects added yet.</p></div>';
+    return;
+  }
+  grid.innerHTML = projects.map((p, i) => {
+    const stacks = (p.stack||'').split(',').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="stack-tag">${s}</span>`).join('');
+    const link   = p.url ? `<a href="${p.url}" target="_blank" class="proj-link">View Live ↗</a>` : '';
+    const d      = i%3===1?' reveal-delay-1':i%3===2?' reveal-delay-2':'';
+    return `<div class="proj-card reveal${d}">
+      <div class="proj-img" style="${COLORS[p.color]||COLORS.cafe}color:rgba(200,164,90,0.5);">
+        <div class="proj-overlay"></div>
+        <div class="proj-img-inner">
+          <span class="proj-img-icon">${p.icon||'🌐'}</span>
+          <span style="font-size:13px;letter-spacing:2px;">${(p.tag||'').toUpperCase()}</span>
         </div>
-        <div class="eform-group eform-full"><label>Tech Stack (comma separated)</label><input type="text" id="f-stack" placeholder="e.g. Next.js, Firebase, Razorpay"/></div>
       </div>
-      <div style="margin-top:8px;">
-        <button class="btn-add" id="saveBtn" onclick="saveProject()">Save Project</button>
-        <button class="btn-cancel-edit" id="cancelEditBtn" style="display:none;" onclick="cancelEdit()">Cancel Edit</button>
+      <div class="proj-body">
+        <span class="proj-tag">${p.tag||''}</span>
+        <div class="proj-name">${p.name||''}</div>
+        <div class="proj-desc">${p.desc||''}</div>
+        ${link}
+        ${stacks ? `<div class="proj-stack">${stacks}</div>` : ''}
       </div>
-      <p class="editor-note">💡 Projects save in your browser's local storage and appear live on the page instantly. They persist across sessions. Click the ✏️ button anytime to add, edit, or remove projects.</p>
-    </div>
-    <div class="tab-content" id="tab-manage"><div class="elist" id="editorList"></div></div>
-  </div>
-</div>
-
-<script>
-const navbar=document.getElementById('navbar');
-window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>50));
-document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
-function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');}
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-function handleSubmit(e){e.preventDefault();const b=e.target;b.textContent='✓ Booking Received!';b.style.background='#2a6a2a';b.style.color='#fff';setTimeout(()=>{b.textContent='Book Your Free Call ↗';b.style.background='';b.style.color='';},4000);}
-const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll',()=>{let c='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)c=s.id;});navLinks.forEach(a=>a.style.color=a.getAttribute('href')==='#'+c?'var(--gold)':'');});
-const COLORS={cafe:'background:linear-gradient(135deg,#0d0a06 0%,#1e1608 50%,#0d0a06 100%);',ecom:'background:linear-gradient(135deg,#050d12 0%,#0c1e28 50%,#050d12 100%);',agency:'background:linear-gradient(135deg,#0a050d 0%,#180c22 50%,#0a050d 100%);',salon:'background:linear-gradient(135deg,#0d0a06 0%,#221808 50%,#0d0a06 100%);',startup:'background:linear-gradient(135deg,#050d0a 0%,#0c2218 50%,#050d0a 100%);',resto:'background:linear-gradient(135deg,#0d0808 0%,#220c0c 50%,#0d0808 100%);'};
-let editingId=null;
-function getProjects(){try{return JSON.parse(localStorage.getItem('brewniq_projects')||'[]');}catch(e){return[];}}
-function saveProjects(a){localStorage.setItem('brewniq_projects',JSON.stringify(a));}
-function renderPortfolio(){
-  const grid=document.getElementById('portfolioGrid'),projects=getProjects();
-  if(!projects.length){grid.innerHTML='<div class="portfolio-empty"><span class="e-icon">🖼</span><p>No projects added yet.</p><a href="#" onclick="openEditor();return false;">Add your first project ↗</a></div>';return;}
-  grid.innerHTML=projects.map((p,i)=>{
-    const stacks=(p.stack||'').split(',').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="stack-tag">${s}</span>`).join('');
-    const link=p.url?`<a href="${p.url}" target="_blank" class="proj-link">View Live ↗</a>`:'';
-    const d=i%3===1?' reveal-delay-1':i%3===2?' reveal-delay-2':'';
-    return `<div class="proj-card reveal${d}"><div class="proj-img" style="${COLORS[p.color]||COLORS.cafe}color:rgba(200,164,90,0.5);"><div class="proj-overlay"></div><div class="proj-img-inner"><span class="proj-img-icon">${p.icon||'🌐'}</span><span style="font-size:13px;letter-spacing:2px;">${(p.tag||'').toUpperCase()}</span></div></div><div class="proj-body"><span class="proj-tag">${p.tag||''}</span><div class="proj-name">${p.name||''}</div><div class="proj-desc">${p.desc||''}</div>${link}${stacks?`<div class="proj-stack">${stacks}</div>`:''}</div></div>`;
+    </div>`;
   }).join('');
-  grid.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
-function renderEditorList(){
-  const list=document.getElementById('editorList'),projects=getProjects();
-  if(!projects.length){list.innerHTML='<div class="no-projects-msg">No projects yet. Add one from the "Add Project" tab.</div>';return;}
-  list.innerHTML=projects.map((p,i)=>`<div class="eitem"><div class="eitem-icon">${p.icon||'🌐'}</div><div class="eitem-info"><div class="eitem-name">${p.name}</div><div class="eitem-tag">${p.tag}</div></div><div class="eitem-actions"><button class="btn-edit-proj" onclick="editProject(${i})">✏</button><button class="btn-del-proj" onclick="deleteProject(${i})">✕</button></div></div>`).join('');
+
+// ── Load from Firebase ─────────────────────────────────────────
+async function loadPortfolio() {
+  try {
+    let projects;
+    try {
+      const q    = query(collection(db, 'projects'), orderBy('order', 'asc'));
+      const snap = await getDocs(q);
+      projects   = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch {
+      // Fallback if composite index not ready
+      const snap = await getDocs(collection(db, 'projects'));
+      projects   = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      projects.sort((a,b) => (a.order||0) - (b.order||0));
+    }
+    renderPortfolio(projects);
+  } catch(e) {
+    console.error('Failed to load projects:', e);
+    document.getElementById('portfolioGrid').innerHTML =
+      '<div class="portfolio-empty"><span class="e-icon">⚠️</span><p>Could not load projects.</p></div>';
+  }
 }
-function saveProject(){
-  const name=document.getElementById('f-name').value.trim(),tag=document.getElementById('f-tag').value.trim(),desc=document.getElementById('f-desc').value.trim();
-  if(!name||!tag||!desc){alert('Please fill in Name, Category, and Description.');return;}
-  const proj={name,tag,desc,url:document.getElementById('f-url').value.trim(),icon:document.getElementById('f-icon').value.trim()||'🌐',color:document.getElementById('f-color').value,stack:document.getElementById('f-stack').value.trim()};
-  const projects=getProjects();
-  if(editingId!==null){projects[editingId]=proj;editingId=null;}else projects.push(proj);
-  saveProjects(projects);clearForm();renderPortfolio();renderEditorList();
-  document.getElementById('cancelEditBtn').style.display='none';
-  const btn=document.getElementById('saveBtn');btn.textContent='✓ Saved!';setTimeout(()=>btn.textContent='Save Project',2000);
-}
-function editProject(i){
-  const p=getProjects()[i];
-  document.getElementById('f-name').value=p.name||'';document.getElementById('f-tag').value=p.tag||'';document.getElementById('f-desc').value=p.desc||'';document.getElementById('f-url').value=p.url||'';document.getElementById('f-icon').value=p.icon||'';document.getElementById('f-color').value=p.color||'cafe';document.getElementById('f-stack').value=p.stack||'';
-  editingId=i;document.getElementById('saveBtn').textContent='Update Project';document.getElementById('cancelEditBtn').style.display='inline-block';switchTab('add');
-}
-function cancelEdit(){editingId=null;clearForm();document.getElementById('saveBtn').textContent='Save Project';document.getElementById('cancelEditBtn').style.display='none';}
-function deleteProject(i){if(!confirm('Delete this project?'))return;const p=getProjects();p.splice(i,1);saveProjects(p);renderPortfolio();renderEditorList();}
-function clearForm(){['f-name','f-tag','f-desc','f-url','f-icon','f-stack'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-color').value='cafe';}
-function openEditor(){document.getElementById('editorOverlay').classList.add('open');renderEditorList();}
-function closeEditor(){document.getElementById('editorOverlay').classList.remove('open');}
-document.getElementById('editorOverlay').addEventListener('click',function(e){if(e.target===this)closeEditor();});
-function switchTab(tab){
-  document.querySelectorAll('.etab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='add'?0:1)));
-  document.getElementById('tab-add').classList.toggle('active',tab==='add');
-  document.getElementById('tab-manage').classList.toggle('active',tab==='manage');
-  if(tab==='manage')renderEditorList();
-}
-renderPortfolio();
+
+loadPortfolio();
 </script>
 </body>
 </html>
