@@ -346,17 +346,17 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:60px 4
     <div class="reveal reveal-delay-2">
       <div class="booking-form">
         <div class="form-row">
-          <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full name"/></div>
-          <div class="form-group"><label>Business Name</label><input type="text" placeholder="Your business"/></div>
+          <div class="form-group"><label>Your Name</label><input id="b-name" type="text" placeholder="Full name"/></div>
+          <div class="form-group"><label>Business Name</label><input id="b-business" type="text" placeholder="Your business"/></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX"/></div>
-          <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@business.com"/></div>
+          <div class="form-group"><label>Phone Number</label><input id="b-phone" type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+          <div class="form-group"><label>Email Address</label><input id="b-email" type="email" placeholder="you@business.com"/></div>
         </div>
-        <div class="form-group"><label>Service Needed</label><select><option value="">Select a service...</option><option>Website Design &amp; Development</option><option>Online Ordering System</option><option>Website Maintenance</option><option>Firebase Integration</option><option>Franchise/Business Website</option><option>Hosting &amp; Deployment</option><option>Full Digital Solution</option></select></div>
-        <div class="form-group"><label>Preferred Time</label><select><option value="">Choose a time slot...</option><option>Morning (9 AM – 12 PM)</option><option>Afternoon (12 PM – 3 PM)</option><option>Evening (3 PM – 6 PM)</option><option>Flexible / Anytime</option></select></div>
-        <div class="form-group"><label>Tell Us About Your Project</label><textarea placeholder="Brief description of your business and what you're looking to build..."></textarea></div>
-        <button class="btn-submit" onclick="handleSubmit(event)">Book Your Free Call ↗</button>
+        <div class="form-group"><label>Service Needed</label><select id="b-service"><option value="">Select a service...</option><option>Website Design &amp; Development</option><option>Online Ordering System</option><option>Website Maintenance</option><option>Firebase Integration</option><option>Franchise/Business Website</option><option>Hosting &amp; Deployment</option><option>Full Digital Solution</option></select></div>
+        <div class="form-group"><label>Preferred Time</label><select id="b-time"><option value="">Choose a time slot...</option><option>Morning (9 AM – 12 PM)</option><option>Afternoon (12 PM – 3 PM)</option><option>Evening (3 PM – 6 PM)</option><option>Flexible / Anytime</option></select></div>
+        <div class="form-group"><label>Tell Us About Your Project</label><textarea id="b-message" placeholder="Brief description of your business and what you're looking to build..."></textarea></div>
+        <button class="btn-submit" id="submitBtn" onclick="handleSubmit(event)">Book Your Free Call ↗</button>
         <p class="form-note">We'll reach out within 2 hours on WhatsApp or email.</p>
       </div>
     </div>
@@ -377,7 +377,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:60px 4
       <h2 class="section-title">Ready to get<br>your business<br><em>online?</em></h2>
       <p class="section-sub" style="margin-top:16px;">Reach us through any of the channels below. We respond within 2 hours on WhatsApp and within the same day on email.</p>
       <div class="contact-channels">
-        <a href="mailto:brewniq@gmail.com" class="channel"><div class="ch-icon">✉</div><div class="ch-info"><div class="ch-label">Email</div><div class="ch-val">brewniq@gmail.com</div></div></a>
+        <a href="mailto:brewniqservice@gmail.com" class="channel"><div class="ch-icon">✉</div><div class="ch-info"><div class="ch-label">Email</div><div class="ch-val">brewniqservice@gmail.com</div></div></a>
         <a href="https://instagram.com/brewniq" class="channel" target="_blank"><div class="ch-icon">◈</div><div class="ch-info"><div class="ch-label">Instagram</div><div class="ch-val">@brewniq</div></div></a>
         <a href="https://wa.me/919999999999" class="channel" target="_blank"><div class="ch-icon">◉</div><div class="ch-info"><div class="ch-label">WhatsApp</div><div class="ch-val">DM to start a conversation</div></div></a>
       </div>
@@ -395,12 +395,15 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:60px 4
     <div class="footer-brand"><a href="#" class="nav-logo">BREW<span>N</span>IQ</a><p>A premium web design and development agency helping businesses grow their digital presence — one website at a time.</p></div>
     <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Website Design</a></li><li><a href="#services">Development</a></li><li><a href="#services">Maintenance</a></li><li><a href="#services">Firebase Integration</a></li><li><a href="#services">Online Ordering</a></li><li><a href="#services">Hosting &amp; Deployment</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a href="#about">About Us</a></li><li><a href="#portfolio">Our Work</a></li><li><a href="#booking">Book a Call</a></li><li><a href="#contact">Contact</a></li></ul></div>
-    <div class="footer-col"><h4>Connect</h4><ul><li><a href="https://instagram.com/brewniq">Instagram</a></li><li><a href="mailto:hello@brewniq.com">Email</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">LinkedIn</a></li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li><a href="https://instagram.com/brewniq">Instagram</a></li><li><a href="mailto:brewniqservice@gmail.com">Email</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">LinkedIn</a></li></ul></div>
   </div>
   <div class="footer-bottom"><p>© 2025 <span class="gold">Brewniq</span>. All rights reserved.</p><p>Built with precision in Hyderabad 🖤</p></div>
 </footer>
 
 
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script type="module">
 // ── Firebase config (same as admin.html) ──────────────────────
@@ -428,10 +431,61 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-window.handleSubmit = function(e){
-  e.preventDefault(); const b=e.target;
-  b.textContent='✓ Booking Received!'; b.style.background='#2a6a2a'; b.style.color='#fff';
-  setTimeout(()=>{b.textContent='Book Your Free Call ↗';b.style.background='';b.style.color='';},4000);
+// ── EmailJS config — REPLACE these three values ───────────────
+const EMAILJS_SERVICE_ID  = 'service_j1bi0sl';   // e.g. 'service_abc123'
+const EMAILJS_TEMPLATE_ID = 'template_nl57u7o';  // e.g. 'template_xyz789'
+const EMAILJS_PUBLIC_KEY  = 'iV1fUI54VnhyfyzU_';   // e.g. 'aBcDeFgHiJkLmNoP'
+
+window.handleSubmit = async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+
+  const name     = document.getElementById('b-name').value.trim();
+  const business = document.getElementById('b-business').value.trim();
+  const phone    = document.getElementById('b-phone').value.trim();
+  const email    = document.getElementById('b-email').value.trim();
+  const service  = document.getElementById('b-service').value;
+  const time     = document.getElementById('b-time').value;
+  const message  = document.getElementById('b-message').value.trim();
+
+  if (!name || !phone) {
+    alert('Please enter at least your name and phone number.');
+    return;
+  }
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      from_name : name,
+      business  : business || '—',
+      phone     : phone,
+      email     : email || '—',
+      service   : service || '—',
+      time      : time || '—',
+      message   : message || '—',
+    }, EMAILJS_PUBLIC_KEY);
+
+    btn.textContent = '✓ Booking Received!';
+    btn.style.background = '#2a6a2a';
+    btn.style.color = '#fff';
+    ['b-name','b-business','b-phone','b-email','b-message'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('b-service').selectedIndex = 0;
+    document.getElementById('b-time').selectedIndex = 0;
+  } catch(err) {
+    console.error('EmailJS error:', err);
+    btn.textContent = '✗ Failed — Try Again';
+    btn.style.background = '#6a2a2a';
+    btn.style.color = '#fff';
+  }
+
+  setTimeout(() => {
+    btn.textContent = 'Book Your Free Call ↗';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.disabled = false;
+  }, 4000);
 };
 const sections=document.querySelectorAll('section[id]'), navLinks=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{

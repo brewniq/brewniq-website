@@ -96,7 +96,8 @@ body{background:var(--black);color:var(--text);font-family:'Syne',sans-serif;fon
   <div class="login-box">
     <div class="login-logo">BREW<span>N</span>IQ</div>
     <div class="login-sub">Admin Panel</div>
-    <div class="login-group"><label>Password</label><input type="password" id="pwInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="login-group"><label>Email</label><input type="email" id="pwInput" placeholder="admin@brewniq.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="login-group"><label>Password</label><input type="password" id="pwInput2" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
     <button class="btn-login" onclick="doLogin()">Enter Admin Panel</button>
     <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
   </div>
@@ -181,46 +182,44 @@ const FIREBASE_CONFIG = {
   appId: "1:618275666462:web:f5ec21bfcc76e4cd524c0f"
 };
 
-// ============================================================
-// CHANGE THIS PASSWORD to something secure
-// ============================================================
-const ADMIN_PASSWORD = "brewniq@2026";
-// ============================================================
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-let db = null;
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
+const auth = getAuth(app);
 let projects = [];
 let editingId = null;
-const isConfigured = FIREBASE_CONFIG.apiKey !== "";
-// Init Firebase
-if (isConfigured) {
-  try {
-    const app = initializeApp(FIREBASE_CONFIG);
-    db = getFirestore(app);
-    document.getElementById('firebaseBanner').style.display = 'none';
-  } catch(e) {
-    showStatus('Firebase init error: ' + e.message, true);
-  }
-}
+document.getElementById('firebaseBanner').style.display = 'none';
 
-// ===== LOGIN =====
-window.doLogin = function() {
-  const pw = document.getElementById('pwInput').value;
-  if (pw === ADMIN_PASSWORD) {
+// ===== LOGIN (Firebase Auth) =====
+window.doLogin = async function() {
+  const email = document.getElementById('pwInput').value.trim();
+  const password = document.getElementById('pwInput2').value;
+  const btn = document.querySelector('.btn-login');
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
     document.getElementById('loginWrap').style.display = 'none';
     document.getElementById('adminWrap').style.display = 'block';
-    if (db) loadProjects();
-    else renderList();
-  } else {
-    document.getElementById('loginErr').style.display = 'block';
+    loadProjects();
+  } catch(e) {
+    const err = document.getElementById('loginErr');
+    err.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+      ? 'Incorrect email or password.' : 'Login error: ' + e.message;
+    err.style.display = 'block';
   }
+  btn.textContent = 'Enter Admin Panel';
+  btn.disabled = false;
 };
-window.doLogout = function() {
+window.doLogout = async function() {
+  await signOut(auth);
   document.getElementById('loginWrap').style.display = 'flex';
   document.getElementById('adminWrap').style.display = 'none';
   document.getElementById('pwInput').value = '';
+  document.getElementById('pwInput2').value = '';
 };
 
 // ===== LOAD =====
