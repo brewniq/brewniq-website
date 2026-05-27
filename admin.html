@@ -185,8 +185,7 @@ import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, o
 let db = null;
 let projects = [];
 let editingId = null;
-const isConfigured = "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w".apiKey !== "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w";
-
+const isConfigured = FIREBASE_CONFIG.apiKey !== "";
 // Init Firebase
 if (isConfigured) {
   try {
