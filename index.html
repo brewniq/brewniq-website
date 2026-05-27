@@ -405,32 +405,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:60px 4
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<script type="module">
-// ── Firebase config (same as admin.html) ──────────────────────
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w",
-  authDomain: "brewniq-bef2c.firebaseapp.com",
-  projectId: "brewniq-bef2c",
-  storageBucket: "brewniq-bef2c.firebasestorage.app",
-  messagingSenderId: "618275666462",
-  appId: "1:618275666462:web:f5ec21bfcc76e4cd524c0f"
-};
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app = initializeApp(FIREBASE_CONFIG);
-const db  = getFirestore(app);
-
-// ── Nav / scroll / animations ──────────────────────────────────
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
-document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('open'));
-window.closeMobile = function(){ document.getElementById('mobileMenu').classList.remove('open'); };
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } });
-}, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+<script>
 // ── EmailJS config — REPLACE these three values ───────────────
 const EMAILJS_SERVICE_ID  = 'service_j1bi0sl';   // e.g. 'service_abc123'
 const EMAILJS_TEMPLATE_ID = 'template_nl57u7o';  // e.g. 'template_xyz789'
@@ -487,6 +462,34 @@ window.handleSubmit = async function(e) {
     btn.disabled = false;
   }, 4000);
 };
+</script>
+
+<script type="module">
+// ── Firebase config (same as admin.html) ──────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w",
+  authDomain: "brewniq-bef2c.firebaseapp.com",
+  projectId: "brewniq-bef2c",
+  storageBucket: "brewniq-bef2c.firebasestorage.app",
+  messagingSenderId: "618275666462",
+  appId: "1:618275666462:web:f5ec21bfcc76e4cd524c0f"
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
+
+// ── Nav / scroll / animations ──────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('open'));
+window.closeMobile = function(){ document.getElementById('mobileMenu').classList.remove('open'); };
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 const sections=document.querySelectorAll('section[id]'), navLinks=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{
   let c=''; sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)c=s.id;});
