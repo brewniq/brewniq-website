@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brewniq Admin — Project Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#050505;--deep:#0a0a0a;--surface:#0f0f0f;--card:#141414;--border:rgba(255,255,255,0.07);--gold:#c8a45a;--gold2:#e8c87a;--gold-dim:rgba(200,164,90,0.12);--cream:#f0ead8;--muted:#666;--muted2:#333;--text:#d4cfc4;--red:#c84a4a;}
+body{background:var(--black);color:var(--text);font-family:'Syne',sans-serif;font-weight:300;min-height:100vh;}
+::selection{background:var(--gold);color:var(--black);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--gold);}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--black);}
+.login-box{background:var(--surface);border:1px solid var(--border);padding:48px 40px;width:100%;max-width:400px;text-align:center;}
+.login-logo{font-family:'Playfair Display',serif;font-size:26px;letter-spacing:3px;color:var(--cream);margin-bottom:6px;}
+.login-logo span{color:var(--gold);}
+.login-sub{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:36px;}
+.login-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;text-align:left;}
+.login-group label{font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.login-group input{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--cream);font-family:'Syne',sans-serif;font-size:14px;padding:13px 16px;outline:none;transition:border-color 0.2s;width:100%;}
+.login-group input:focus{border-color:var(--gold);}
+.login-group input::placeholder{color:var(--muted2);}
+.btn-login{width:100%;background:var(--gold);color:var(--black);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:14px;border:none;cursor:pointer;transition:all 0.3s;margin-top:8px;}
+.btn-login:hover{background:var(--gold2);}
+.login-err{font-size:12px;color:var(--red);margin-top:12px;display:none;}
+
+/* ADMIN LAYOUT */
+.admin-wrap{display:none;min-height:100vh;}
+.admin-header{background:var(--deep);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+.admin-logo{font-family:'Playfair Display',serif;font-size:18px;letter-spacing:3px;color:var(--cream);}
+.admin-logo span{color:var(--gold);}
+.admin-logo small{font-family:'Syne',sans-serif;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-left:10px;}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+.admin-body{display:grid;grid-template-columns:420px 1fr;gap:0;min-height:calc(100vh - 57px);}
+.admin-form-panel{background:var(--surface);border-right:1px solid var(--border);padding:32px;overflow-y:auto;}
+.admin-list-panel{padding:32px;overflow-y:auto;}
+
+.panel-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);margin-bottom:6px;}
+.panel-sub{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:28px;}
+
+.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.fg label{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--cream);font-family:'Syne',sans-serif;font-size:13px;font-weight:300;padding:12px 14px;outline:none;transition:border-color 0.2s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--muted2);}
+.fg select option{background:var(--black);}
+.fg textarea{resize:vertical;min-height:80px;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-save{background:var(--gold);color:var(--black);font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border:none;cursor:pointer;transition:all 0.3s;}
+.btn-save:hover{background:var(--gold2);}
+.btn-cancel{background:none;border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 18px;cursor:pointer;transition:all 0.2s;margin-left:10px;}
+.btn-cancel:hover{border-color:var(--muted);color:var(--cream);}
+.save-status{font-size:11px;color:var(--gold);margin-top:12px;height:16px;}
+
+/* PROJECT LIST */
+.proj-list{display:flex;flex-direction:column;gap:10px;}
+.proj-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);padding:16px 18px;transition:border-color 0.2s;}
+.proj-item:hover{border-color:rgba(200,164,90,0.2);}
+.pi-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0;}
+.pi-info{flex:1;}
+.pi-name{font-size:14px;color:var(--cream);font-weight:500;margin-bottom:2px;}
+.pi-tag{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.pi-url{font-size:11px;color:var(--muted);margin-top:2px;}
+.pi-actions{display:flex;gap:8px;flex-shrink:0;}
+.btn-edit,.btn-del{background:none;border:1px solid var(--border);color:var(--muted);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s;}
+.btn-edit:hover{border-color:var(--gold);color:var(--gold);}
+.btn-del:hover{border-color:var(--red);color:var(--red);}
+.empty-list{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;letter-spacing:1px;}
+.empty-list .e-icon{font-size:36px;opacity:0.25;display:block;margin-bottom:12px;}
+
+/* STATUS BAR */
+.status-bar{background:var(--gold-dim);border:1px solid rgba(200,164,90,0.15);padding:10px 16px;font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:24px;display:none;}
+
+.firebase-banner{background:rgba(200,164,90,0.06);border:1px solid rgba(200,164,90,0.2);padding:16px 20px;margin-bottom:28px;font-size:12px;color:var(--muted);line-height:1.7;}
+.firebase-banner strong{color:var(--gold);display:block;margin-bottom:6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.firebase-banner code{background:rgba(255,255,255,0.06);padding:2px 6px;font-size:11px;color:var(--cream);}
+
+@media(max-width:800px){
+  .admin-body{grid-template-columns:1fr;}
+  .admin-form-panel{border-right:none;border-bottom:1px solid var(--border);}
+  .fg-row{grid-template-columns:1fr;}
+  .admin-header{padding:14px 20px;}
+  .admin-form-panel,.admin-list-panel{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">BREW<span>N</span>IQ</div>
+    <div class="login-sub">Admin Panel</div>
+    <div class="login-group"><label>Password</label><input type="password" id="pwInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <button class="btn-login" onclick="doLogin()">Enter Admin Panel</button>
+    <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-wrap" id="adminWrap">
+  <div class="admin-header">
+    <div class="admin-logo">BREW<span>N</span>IQ <small>Admin Panel</small></div>
+    <button class="btn-logout" onclick="doLogout()">Log Out</button>
+  </div>
+  <div class="admin-body">
+
+    <!-- FORM -->
+    <div class="admin-form-panel">
+      <div class="panel-title" id="formTitle">Add New Project</div>
+      <div class="panel-sub" id="formSub">Fill in the details below to add a project to the portfolio.</div>
+
+      <div class="firebase-banner" id="firebaseBanner">
+        <strong>⚙ Firebase Config Required</strong>
+        Open this file in a text editor and replace the <code>FIREBASE_CONFIG</code> placeholder near the bottom of the script with your actual Firebase config object. Projects will then sync live to your main site.
+      </div>
+
+      <div class="fg"><label>Project Name *</label><input type="text" id="f-name" placeholder="e.g. The Black Carafe"/></div>
+      <div class="fg"><label>Category Tag *</label><input type="text" id="f-tag" placeholder="e.g. Cafe & Dining"/></div>
+      <div class="fg"><label>Short Description *</label><textarea id="f-desc" placeholder="Brief description of the project and what was built..."></textarea></div>
+      <div class="fg-row">
+        <div class="fg"><label>Emoji Icon</label><input type="text" id="f-icon" placeholder="☕ 🛍 🏢 ✂️ 🚀"/></div>
+        <div class="fg"><label>Card Color</label>
+          <select id="f-color">
+            <option value="cafe">Warm Brown</option>
+            <option value="ecom">Deep Blue</option>
+            <option value="agency">Deep Purple</option>
+            <option value="salon">Amber</option>
+            <option value="startup">Teal Green</option>
+            <option value="resto">Deep Red</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Live Website URL</label><input type="url" id="f-url" placeholder="https://yourclient.com"/></div>
+      <div class="fg"><label>Tech Stack (comma separated)</label><input type="text" id="f-stack" placeholder="Next.js, Firebase, Razorpay"/></div>
+      <div class="fg"><label>Display Order (lower = first)</label><input type="number" id="f-order" placeholder="1" min="0"/></div>
+
+      <div style="margin-top:8px;">
+        <button class="btn-save" id="saveBtn" onclick="saveProject()">Save Project</button>
+        <button class="btn-cancel" id="cancelBtn" style="display:none;" onclick="cancelEdit()">Cancel</button>
+      </div>
+      <div class="save-status" id="saveStatus"></div>
+    </div>
+
+    <!-- LIST -->
+    <div class="admin-list-panel">
+      <div class="panel-title">All Projects</div>
+      <div class="panel-sub" id="listCount">Loading...</div>
+      <div class="status-bar" id="statusBar"></div>
+      <div class="proj-list" id="projList"><div class="empty-list"><span class="e-icon">🖼</span>Connect Firebase to load projects.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+// ============================================================
+// PASTE YOUR FIREBASE CONFIG HERE
+// Get it from: Firebase Console → Project Settings → Your Apps
+// ============================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAay6dcPCzEhLjBaeBElmHuXMnTLgRM61w",
+  authDomain: "brewniq-bef2c.firebaseapp.com",
+  projectId: "brewniq-bef2c",
+  storageBucket: "brewniq-bef2c.firebasestorage.app",
+  messagingSenderId: "618275666462",
+  appId: "1:618275666462:web:f5ec21bfcc76e4cd524c0f"
+};
+
+// ============================================================
+// CHANGE THIS PASSWORD to something secure
+// ============================================================
+const ADMIN_PASSWORD = "brewniq@2026";
+// ============================================================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+let db = null;
+let projects = [];
+let editingId = null;
+const isConfigured = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
+
+// Init Firebase
+if (isConfigured) {
+  try {
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getFirestore(app);
+    document.getElementById('firebaseBanner').style.display = 'none';
+  } catch(e) {
+    showStatus('Firebase init error: ' + e.message, true);
+  }
+}
+
+// ===== LOGIN =====
+window.doLogin = function() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    if (db) loadProjects();
+    else renderList();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+};
+window.doLogout = function() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('adminWrap').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+};
+
+// ===== LOAD =====
+async function loadProjects() {
+  try {
+    document.getElementById('listCount').textContent = 'Loading...';
+    const q = query(collection(db, 'projects'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderList();
+  } catch(e) {
+    // Try without ordering if index not ready
+    try {
+      const snap = await getDocs(collection(db, 'projects'));
+      projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      projects.sort((a,b) => (a.order||0) - (b.order||0));
+      renderList();
+    } catch(e2) {
+      showStatus('Error loading: ' + e2.message, true);
+    }
+  }
+}
+
+// ===== RENDER LIST =====
+function renderList() {
+  const list = document.getElementById('projList');
+  const count = document.getElementById('listCount');
+  count.textContent = projects.length + ' project' + (projects.length !== 1 ? 's' : '') + ' in portfolio';
+  if (!projects.length) {
+    list.innerHTML = '<div class="empty-list"><span class="e-icon">🖼</span>No projects yet. Add one using the form.</div>';
+    return;
+  }
+  list.innerHTML = projects.map((p, i) => `
+    <div class="proj-item">
+      <div class="pi-icon">${p.icon || '🌐'}</div>
+      <div class="pi-info">
+        <div class="pi-name">${p.name}</div>
+        <div class="pi-tag">${p.tag} ${p.order !== undefined ? '· #' + p.order : ''}</div>
+        ${p.url ? `<div class="pi-url">↗ ${p.url}</div>` : ''}
+      </div>
+      <div class="pi-actions">
+        <button class="btn-edit" onclick="startEdit('${p.id}')" title="Edit">✏</button>
+        <button class="btn-del" onclick="deleteProject('${p.id}', '${p.name.replace(/'/g,'')}')" title="Delete">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+// ===== SAVE =====
+window.saveProject = async function() {
+  const name = document.getElementById('f-name').value.trim();
+  const tag = document.getElementById('f-tag').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  if (!name || !tag || !desc) { alert('Name, Category and Description are required.'); return; }
+
+  const data = {
+    name, tag, desc,
+    url: document.getElementById('f-url').value.trim(),
+    icon: document.getElementById('f-icon').value.trim() || '🌐',
+    color: document.getElementById('f-color').value,
+    stack: document.getElementById('f-stack').value.trim(),
+    order: parseInt(document.getElementById('f-order').value) || 0,
+    updatedAt: new Date().toISOString()
+  };
+
+  const btn = document.getElementById('saveBtn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    if (!db) {
+      showStatus('⚠ Firebase not configured. Add your config to enable saving.', true);
+      btn.textContent = editingId ? 'Update Project' : 'Save Project';
+      btn.disabled = false;
+      return;
+    }
+    if (editingId) {
+      await updateDoc(doc(db, 'projects', editingId), data);
+      showStatus('✓ Project updated successfully');
+    } else {
+      data.createdAt = new Date().toISOString();
+      await addDoc(collection(db, 'projects'), data);
+      showStatus('✓ Project added successfully');
+    }
+    clearForm();
+    await loadProjects();
+  } catch(e) {
+    showStatus('Error: ' + e.message, true);
+  }
+  btn.textContent = editingId ? 'Update Project' : 'Save Project';
+  btn.disabled = false;
+};
+
+// ===== EDIT =====
+window.startEdit = function(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('f-name').value = p.name || '';
+  document.getElementById('f-tag').value = p.tag || '';
+  document.getElementById('f-desc').value = p.desc || '';
+  document.getElementById('f-url').value = p.url || '';
+  document.getElementById('f-icon').value = p.icon || '';
+  document.getElementById('f-color').value = p.color || 'cafe';
+  document.getElementById('f-stack').value = p.stack || '';
+  document.getElementById('f-order').value = p.order !== undefined ? p.order : '';
+  editingId = id;
+  document.getElementById('saveBtn').textContent = 'Update Project';
+  document.getElementById('cancelBtn').style.display = 'inline-block';
+  document.getElementById('formTitle').textContent = 'Edit Project';
+  document.getElementById('formSub').textContent = 'Editing: ' + p.name;
+  document.querySelector('.admin-form-panel').scrollTop = 0;
+};
+
+window.cancelEdit = function() {
+  editingId = null; clearForm();
+  document.getElementById('saveBtn').textContent = 'Save Project';
+  document.getElementById('cancelBtn').style.display = 'none';
+  document.getElementById('formTitle').textContent = 'Add New Project';
+  document.getElementById('formSub').textContent = 'Fill in the details below to add a project to the portfolio.';
+};
+
+// ===== DELETE =====
+window.deleteProject = async function(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  try {
+    await deleteDoc(doc(db, 'projects', id));
+    showStatus('✓ Project deleted');
+    await loadProjects();
+  } catch(e) {
+    showStatus('Error: ' + e.message, true);
+  }
+};
+
+function clearForm() {
+  ['f-name','f-tag','f-desc','f-url','f-icon','f-stack','f-order'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-color').value = 'cafe';
+}
+
+function showStatus(msg, isErr = false) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.style.display = 'block';
+  bar.style.color = isErr ? 'var(--red)' : 'var(--gold)';
+  bar.style.borderColor = isErr ? 'rgba(200,74,74,0.2)' : 'rgba(200,164,90,0.15)';
+  setTimeout(() => bar.style.display = 'none', 5000);
+}
+</script>
+</body>
+</html>
