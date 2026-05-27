@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brewniq — Build Your Digital Presence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#050505;--deep:#0a0a0a;--surface:#0f0f0f;--card:#141414;--card2:#181818;
+  --border:rgba(255,255,255,0.06);--gold:#c8a45a;--gold2:#e8c87a;
+  --gold-dim:rgba(200,164,90,0.15);--cream:#f0ead8;
+  --muted:#666;--muted2:#444;--text:#d4cfc4;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Syne',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.6;}
+::selection{background:var(--gold);color:var(--black);}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;transition:all 0.4s;}
+nav.scrolled{background:rgba(5,5,5,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 48px;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:3px;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;gap:36px;list-style:none;align-items:center;}
+.nav-links a{font-size:11px;letter-spacing:2.5px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Syne',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;padding:10px 24px;cursor:pointer;transition:all 0.3s;text-decoration:none;}
+.nav-cta:hover{background:var(--gold);color:var(--black);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:22px;height:1px;background:var(--cream);transition:all 0.3s;}
+.mobile-menu{display:none;position:fixed;inset:0;background:rgba(5,5,5,0.98);z-index:490;flex-direction:column;align-items:center;justify-content:center;gap:40px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Playfair Display',serif;font-size:32px;color:var(--cream);text-decoration:none;transition:color 0.3s;}
+.mobile-menu a:hover{color:var(--gold);}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 48px 80px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(200,164,90,0.07) 0%, transparent 65%),radial-gradient(ellipse 40% 30% at 20% 80%, rgba(200,164,90,0.04) 0%, transparent 60%),radial-gradient(ellipse 30% 20% at 80% 20%, rgba(200,164,90,0.04) 0%, transparent 60%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,164,90,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,164,90,0.03) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black 30%,transparent 80%);}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(200,164,90,0.3);padding:7px 18px;border-radius:100px;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:32px;animation:fadeUp 0.8s ease both;}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(44px,7vw,88px);font-weight:700;line-height:1.05;color:var(--cream);margin-bottom:24px;animation:fadeUp 0.8s 0.1s ease both;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:clamp(14px,1.8vw,17px);color:var(--muted);font-weight:300;max-width:560px;margin:0 auto 48px;line-height:1.8;animation:fadeUp 0.8s 0.2s ease both;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.8s 0.3s ease both;}
+.btn-primary{background:var(--gold);color:var(--black);font-family:'Syne',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;padding:15px 36px;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;font-weight:500;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,164,90,0.3);}
+.btn-secondary{background:transparent;color:var(--cream);font-family:'Syne',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;padding:15px 36px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;font-weight:400;}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;animation:fadeUp 0.8s 0.5s ease both;}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollLine 2s ease infinite;}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+.scroll-text{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.marquee-wrap{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0;overflow:hidden;background:var(--deep);}
+.marquee-track{display:flex;white-space:nowrap;animation:marquee 20s linear infinite;}
+.marquee-item{display:inline-flex;align-items:center;gap:20px;padding:0 40px;font-size:11px;letter-spacing:3px;color:var(--muted2);text-transform:uppercase;}
+.marquee-item span{color:var(--gold);font-size:16px;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+section{padding:100px 48px;}
+.section-label{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:16px;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:600;color:var(--cream);line-height:1.15;margin-bottom:16px;}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.8;}
+.about{background:var(--deep);}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto;}
+.about-text .section-sub{max-width:100%;}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:40px;}
+.stat-box{background:var(--deep);padding:28px 24px;}
+.stat-box .num{font-family:'Playfair Display',serif;font-size:40px;color:var(--gold);font-weight:600;line-height:1;margin-bottom:6px;}
+.stat-box .lbl{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.about-card-stack{position:relative;height:380px;}
+.a-card{position:absolute;background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:28px;}
+.a-card:nth-child(1){top:0;right:0;width:75%;animation:floatA 6s ease-in-out infinite;}
+.a-card:nth-child(2){bottom:0;left:0;width:75%;animation:floatB 6s ease-in-out infinite 1s;}
+.a-card:nth-child(3){top:50%;left:50%;transform:translate(-30%,-50%);width:55%;animation:floatC 6s ease-in-out infinite 2s;}
+@keyframes floatA{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes floatB{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+@keyframes floatC{0%,100%{transform:translate(-30%,-50%);}50%{transform:translate(-30%,calc(-50% - 6px));}}
+.a-card .c-icon{font-size:24px;margin-bottom:12px;}
+.a-card .c-title{font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;}
+.a-card .c-desc{font-size:11px;color:var(--muted);}
+.gold-line{width:48px;height:2px;background:var(--gold);margin:24px 0;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--border);margin-top:60px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.srv-card{background:var(--card);padding:40px 36px;position:relative;overflow:hidden;transition:background 0.3s;cursor:default;}
+.srv-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width 0.5s;}
+.srv-card:hover{background:var(--card2);}
+.srv-card:hover::after{width:100%;}
+.srv-num{font-family:'Playfair Display',serif;font-size:52px;color:rgba(200,164,90,0.1);font-weight:700;line-height:1;margin-bottom:20px;transition:color 0.3s;}
+.srv-card:hover .srv-num{color:rgba(200,164,90,0.25);}
+.srv-icon{font-size:28px;margin-bottom:16px;}
+.srv-name{font-size:16px;font-weight:500;color:var(--cream);margin-bottom:10px;letter-spacing:0.5px;}
+.srv-desc{font-size:13px;color:var(--muted);line-height:1.7;}
+.srv-tag{display:inline-block;margin-top:20px;font-size:9px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(200,164,90,0.2);padding:5px 12px;text-transform:uppercase;transition:all 0.3s;}
+.srv-card:hover .srv-tag{background:var(--gold-dim);}
+.process{background:var(--deep);}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative;max-width:1100px;margin-left:auto;margin-right:auto;}
+.process-steps::before{content:'';position:absolute;top:28px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(to right,transparent,var(--gold),var(--gold),transparent);opacity:0.3;}
+.proc-step{padding:0 24px;text-align:center;position:relative;}
+.proc-dot{width:56px;height:56px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;background:var(--black);font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);font-weight:600;transition:all 0.3s;}
+.proc-step:hover .proc-dot{background:var(--gold);color:var(--black);}
+.proc-title{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:8px;}
+.proc-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.booking-inner{display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:start;max-width:1100px;margin:0 auto;}
+.booking-info .section-sub{max-width:100%;margin-top:20px;}
+.booking-perks{margin-top:40px;display:flex;flex-direction:column;gap:16px;}
+.perk{display:flex;align-items:center;gap:14px;}
+.perk-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+.perk-text{font-size:13px;color:var(--text);}
+.booking-form{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid var(--border);padding:44px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.form-group label{font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--cream);font-family:'Syne',sans-serif;font-size:13px;font-weight:300;padding:14px 16px;transition:border-color 0.3s;outline:none;width:100%;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted2);}
+.form-group select option{background:var(--black);}
+textarea{resize:vertical;min-height:100px;}
+.btn-submit{width:100%;background:var(--gold);color:var(--black);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:16px;border:none;cursor:pointer;transition:all 0.3s;margin-top:4px;}
+.btn-submit:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 30px rgba(200,164,90,0.3);}
+.form-note{font-size:11px;color:var(--muted);text-align:center;margin-top:16px;}
+.portfolio{background:var(--deep);}
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-top:60px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.proj-card{background:var(--card);border:1px solid var(--border);overflow:hidden;position:relative;transition:transform 0.4s,box-shadow 0.4s;}
+.proj-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+.proj-img{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;color:rgba(200,164,90,0.5);}
+.proj-img-inner{position:relative;z-index:2;text-align:center;opacity:0.85;}
+.proj-img-icon{font-size:40px;display:block;margin-bottom:8px;}
+.proj-overlay{position:absolute;inset:0;background:rgba(200,164,90,0.08);opacity:0;transition:opacity 0.3s;}
+.proj-card:hover .proj-overlay{opacity:1;}
+.proj-body{padding:24px;}
+.proj-tag{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:block;}
+.proj-name{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);margin-bottom:8px;}
+.proj-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.proj-link{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid rgba(200,164,90,0.2);padding:8px 16px;transition:all 0.3s;}
+.proj-link:hover{background:var(--gold-dim);border-color:var(--gold);}
+.proj-stack{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.stack-tag{font-size:9px;letter-spacing:1.5px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;text-transform:uppercase;}
+.portfolio-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;border:1px dashed rgba(200,164,90,0.15);text-align:center;gap:16px;}
+.portfolio-empty .e-icon{font-size:40px;opacity:0.3;}
+.portfolio-empty p{font-size:13px;color:var(--muted);letter-spacing:1px;}
+.portfolio-empty a{font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid rgba(200,164,90,0.3);padding:10px 24px;transition:all 0.3s;margin-top:8px;display:inline-block;}
+.portfolio-empty a:hover{background:var(--gold-dim);}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto;}
+.contact-channels{margin-top:40px;display:flex;flex-direction:column;gap:16px;}
+.channel{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.02);border:1px solid var(--border);padding:20px 24px;transition:all 0.3s;cursor:pointer;text-decoration:none;}
+.channel:hover{border-color:var(--gold);background:var(--gold-dim);transform:translateX(4px);}
+.ch-icon{width:44px;height:44px;border:1px solid rgba(200,164,90,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all 0.3s;}
+.channel:hover .ch-icon{background:var(--gold);border-color:var(--gold);}
+.ch-label{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+.ch-val{font-size:14px;color:var(--cream);font-weight:400;}
+.contact-map{height:360px;background:var(--card);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;overflow:hidden;}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,164,90,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(200,164,90,0.05) 1px,transparent 1px);background-size:40px 40px;}
+.map-dot{width:16px;height:16px;background:var(--gold);border-radius:50%;position:relative;z-index:2;animation:mapPulse 2s ease-in-out infinite;}
+.map-dot::after{content:'';position:absolute;inset:-8px;border:2px solid rgba(200,164,90,0.4);border-radius:50%;animation:mapRing 2s ease-in-out infinite;}
+@keyframes mapPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+@keyframes mapRing{0%{transform:scale(1);opacity:1;}100%{transform:scale(2.5);opacity:0;}}
+.map-label{font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;position:relative;z-index:2;}
+.map-city{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);position:relative;z-index:2;}
+footer{background:var(--black);border-top:1px solid var(--border);padding:60px 48px 32px;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border);}
+.footer-brand .nav-logo{font-size:20px;display:inline-block;margin-bottom:16px;}
+.footer-brand p{font-size:13px;color:var(--muted);line-height:1.7;max-width:260px;}
+.footer-col h4{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.3s;}
+.footer-col ul a:hover{color:var(--cream);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-bottom p{font-size:12px;color:var(--muted2);}
+.footer-bottom .gold{color:var(--gold);}
+.editor-fab{position:fixed;bottom:32px;right:32px;z-index:800;width:52px;height:52px;background:var(--gold);border:none;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(200,164,90,0.4);transition:all 0.3s;}
+.editor-fab:hover{background:var(--gold2);transform:scale(1.1);}
+.editor-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:900;backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+.editor-overlay.open{display:flex;}
+.editor-modal{background:var(--surface);border:1px solid var(--border);width:100%;max-width:860px;max-height:90vh;overflow-y:auto;padding:40px;position:relative;}
+.editor-modal::-webkit-scrollbar{width:3px;}
+.editor-modal::-webkit-scrollbar-thumb{background:var(--gold);}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.editor-header h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--cream);}
+.editor-close{background:none;border:1px solid var(--border);color:var(--muted);width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.editor-close:hover{border-color:var(--gold);color:var(--gold);}
+.editor-tabs{display:flex;margin-bottom:32px;border-bottom:1px solid var(--border);}
+.etab{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:10px 24px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Syne',sans-serif;}
+.etab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.eform-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.eform-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.eform-group label{font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.eform-group input,.eform-group select,.eform-group textarea{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--cream);font-family:'Syne',sans-serif;font-size:13px;font-weight:300;padding:12px 14px;outline:none;transition:border-color 0.2s;width:100%;}
+.eform-group input:focus,.eform-group select:focus,.eform-group textarea:focus{border-color:var(--gold);}
+.eform-group input::placeholder,.eform-group textarea::placeholder{color:var(--muted2);}
+.eform-group select option{background:var(--black);}
+.eform-group textarea{resize:vertical;min-height:80px;}
+.eform-full{grid-column:1/-1;}
+.btn-add{background:var(--gold);color:var(--black);font-family:'Syne',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;border:none;cursor:pointer;transition:all 0.3s;font-weight:600;}
+.btn-add:hover{background:var(--gold2);}
+.btn-cancel-edit{background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 20px;border:1px solid var(--border);cursor:pointer;transition:all 0.3s;margin-left:10px;}
+.btn-cancel-edit:hover{border-color:var(--muted);color:var(--cream);}
+.elist{display:flex;flex-direction:column;gap:12px;}
+.eitem{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);padding:16px 20px;transition:border-color 0.2s;}
+.eitem:hover{border-color:rgba(200,164,90,0.2);}
+.eitem-icon{font-size:24px;width:40px;text-align:center;flex-shrink:0;}
+.eitem-info{flex:1;}
+.eitem-name{font-size:14px;color:var(--cream);font-weight:500;margin-bottom:3px;}
+.eitem-tag{font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;}
+.eitem-actions{display:flex;gap:8px;}
+.btn-edit-proj,.btn-del-proj{background:none;border:1px solid var(--border);color:var(--muted);font-size:12px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.btn-edit-proj:hover{border-color:var(--gold);color:var(--gold);}
+.btn-del-proj:hover{border-color:#c84a4a;color:#c84a4a;}
+.no-projects-msg{text-align:center;padding:40px;color:var(--muted);font-size:13px;letter-spacing:1px;}
+.editor-note{font-size:11px;color:var(--muted);margin-top:24px;padding:14px 18px;background:rgba(200,164,90,0.05);border-left:2px solid var(--gold);line-height:1.6;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+@media(max-width:900px){
+  nav{padding:18px 24px;}nav.scrolled{padding:14px 24px;}
+  .nav-links,.nav-cta{display:none;}.hamburger{display:flex;}
+  section{padding:72px 24px;}
+  .about-inner,.booking-inner,.contact-inner{grid-template-columns:1fr;gap:48px;}
+  .about-card-stack{display:none;}
+  .process-steps{grid-template-columns:1fr 1fr;gap:32px;}.process-steps::before{display:none;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:32px;}
+  .form-row{grid-template-columns:1fr;}
+  .hero h1{font-size:40px;}
+  .booking-form{padding:28px 20px;}
+  .services-grid{grid-template-columns:1fr;}
+  .eform-grid{grid-template-columns:1fr;}
+  .editor-modal{padding:24px 20px;}
+  .editor-fab{bottom:20px;right:20px;}
+}
+@media(max-width:500px){footer{padding:48px 20px 24px;}.footer-top{grid-template-columns:1fr;}.footer-bottom{flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#" class="nav-logo">BREW<span>N</span>IQ</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#booking" class="nav-cta">Book a Call</a>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#portfolio" onclick="closeMobile()">Work</a>
+  <a href="#booking" onclick="closeMobile()">Book a Call</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div style="position:relative;z-index:2;">
+    <div class="hero-badge">Web Design &amp; Development Agency · Hyderabad</div>
+    <h1>Build Your<br><em>Digital Presence</em><br>with Brewniq</h1>
+    <p class="hero-sub">We create premium websites, ordering systems, and complete digital solutions for cafes, brands, startups, and businesses — live in 1 week.</p>
+    <div class="hero-btns">
+      <a href="#booking" class="btn-primary">Book a Call ↗</a>
+      <a href="#services" class="btn-secondary">View Services</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span class="scroll-text">Scroll</span></div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee-track">
+  <div class="marquee-item">Website Design <span>✦</span></div><div class="marquee-item">Online Ordering <span>✦</span></div><div class="marquee-item">Firebase Integration <span>✦</span></div><div class="marquee-item">Hosting &amp; Deployment <span>✦</span></div><div class="marquee-item">Maintenance &amp; Updates <span>✦</span></div><div class="marquee-item">Franchise Websites <span>✦</span></div><div class="marquee-item">SEO &amp; Google <span>✦</span></div><div class="marquee-item">Digital Solutions <span>✦</span></div>
+  <div class="marquee-item">Website Design <span>✦</span></div><div class="marquee-item">Online Ordering <span>✦</span></div><div class="marquee-item">Firebase Integration <span>✦</span></div><div class="marquee-item">Hosting &amp; Deployment <span>✦</span></div><div class="marquee-item">Maintenance &amp; Updates <span>✦</span></div><div class="marquee-item">Franchise Websites <span>✦</span></div><div class="marquee-item">SEO &amp; Google <span>✦</span></div><div class="marquee-item">Digital Solutions <span>✦</span></div>
+</div></div>
+
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-text reveal">
+      <span class="section-label">About Brewniq</span>
+      <h2 class="section-title">We don't just build<br>websites — we build<br><em>businesses.</em></h2>
+      <div class="gold-line"></div>
+      <p class="section-sub">Brewniq is a Hyderabad-based web design and development agency specialising in premium digital solutions for small and growing businesses. We build custom websites, set up online ordering and booking systems, integrate Firebase, handle hosting, and provide ongoing maintenance — so you can focus on what you do best.</p>
+      <p class="section-sub" style="margin-top:16px;">Every Brewniq project is handcrafted with precision. No templates. No shortcuts. Just clean code and stunning design — delivered in 1 week.</p>
+      <div class="about-stats">
+        <div class="stat-box"><div class="num">1 wk</div><div class="lbl">Average Launch</div></div>
+        <div class="stat-box"><div class="num">0%</div><div class="lbl">Commission on Orders</div></div>
+        <div class="stat-box"><div class="num">100%</div><div class="lbl">Custom Built</div></div>
+        <div class="stat-box"><div class="num">∞</div><div class="lbl">Menu Updates</div></div>
+      </div>
+    </div>
+    <div class="about-visual reveal reveal-delay-2">
+      <div class="about-card-stack">
+        <div class="a-card"><div class="c-icon">⚡</div><div class="c-title">1-week delivery</div><div class="c-desc">From discovery call to live website — faster than any agency in the city.</div></div>
+        <div class="a-card"><div class="c-icon">🎨</div><div class="c-title">Premium design</div><div class="c-desc">Every pixel is intentional. Your website will look like it cost 10× more.</div></div>
+        <div class="a-card"><div class="c-icon">🔧</div><div class="c-title">Ongoing support</div><div class="c-desc">We're your tech team. Updates, fixes, and new features — always included.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" style="background:var(--black);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal"><span class="section-label">What We Build</span><h2 class="section-title">Services that move<br>your business <em>forward.</em></h2></div>
+    <div class="services-grid">
+      <div class="srv-card reveal"><div class="srv-num">01</div><div class="srv-icon">🖥</div><div class="srv-name">Website Design</div><div class="srv-desc">Custom-designed, visually stunning websites that reflect your brand identity. Mobile-first, fast-loading, and built to convert visitors.</div><div class="srv-tag">Design</div></div>
+      <div class="srv-card reveal reveal-delay-1"><div class="srv-num">02</div><div class="srv-icon">⚙️</div><div class="srv-name">Website Development</div><div class="srv-desc">Clean, production-grade code built with modern frameworks. Scalable architecture that grows with your business.</div><div class="srv-tag">Development</div></div>
+      <div class="srv-card reveal reveal-delay-2"><div class="srv-num">03</div><div class="srv-icon">🔧</div><div class="srv-name">Website Maintenance</div><div class="srv-desc">Regular updates, bug fixes, performance optimisation, and security patches — your site is always running perfectly.</div><div class="srv-tag">Ongoing</div></div>
+      <div class="srv-card reveal"><div class="srv-num">04</div><div class="srv-icon">🔥</div><div class="srv-name">Firebase Integration</div><div class="srv-desc">Real-time databases, authentication, cloud functions, and Firestore — we integrate Firebase for dynamic, data-driven apps.</div><div class="srv-tag">Backend</div></div>
+      <div class="srv-card reveal reveal-delay-1"><div class="srv-num">05</div><div class="srv-icon">🛒</div><div class="srv-name">Online Ordering Systems</div><div class="srv-desc">Custom cart, menu management, and Razorpay checkout. Your customers order directly from you — zero commission to anyone.</div><div class="srv-tag">E-Commerce</div></div>
+      <div class="srv-card reveal reveal-delay-2"><div class="srv-num">06</div><div class="srv-icon">🏢</div><div class="srv-name">Franchise &amp; Business Websites</div><div class="srv-desc">Multi-location management, franchise portals, and enterprise-level features for growing businesses and brand networks.</div><div class="srv-tag">Enterprise</div></div>
+      <div class="srv-card reveal" style="grid-column:1/-1;"><div class="srv-num">07</div><div class="srv-icon">🚀</div><div class="srv-name">Hosting &amp; Deployment</div><div class="srv-desc">We handle domain setup, SSL certificates, Vercel/Firebase hosting, and Google Business setup. Your site goes live the right way — fast, secure, and found on Google from day one.</div><div class="srv-tag">Infrastructure</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="process">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;"><span class="section-label">How It Works</span><h2 class="section-title">From call to <em>live</em> — in 1 week.</h2></div>
+    <div class="process-steps">
+      <div class="proc-step reveal"><div class="proc-dot">01</div><div class="proc-title">Discovery Call</div><div class="proc-desc">A free 30-min call to understand your business, goals, and vision. You get a quote the same day.</div></div>
+      <div class="proc-step reveal reveal-delay-1"><div class="proc-dot">02</div><div class="proc-title">Design Preview</div><div class="proc-desc">We send a design mockup within 2–3 days. You review, give feedback, and we refine it.</div></div>
+      <div class="proc-step reveal reveal-delay-2"><div class="proc-dot">03</div><div class="proc-title">Build &amp; Test</div><div class="proc-desc">We build the full site, integrate payments or booking, and test everything thoroughly.</div></div>
+      <div class="proc-step reveal reveal-delay-3"><div class="proc-dot">04</div><div class="proc-title">Launch &amp; Support</div><div class="proc-desc">Your site goes live within 1 week. We hand over your dashboard and stay on as your ongoing tech team.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="booking" style="background:var(--black);">
+  <div class="booking-inner">
+    <div class="booking-info reveal">
+      <span class="section-label">Book a Consultation</span>
+      <h2 class="section-title">Let's build<br>something <em>great</em><br>together.</h2>
+      <p class="section-sub">Book a free 30-minute discovery call. We'll discuss your business, what you need, and exactly what Brewniq can build for you — no obligation.</p>
+      <div class="booking-perks">
+        <div class="perk"><div class="perk-dot"></div><div class="perk-text">Free consultation — no commitment required</div></div>
+        <div class="perk"><div class="perk-dot"></div><div class="perk-text">Get a detailed quote within the same day</div></div>
+        <div class="perk"><div class="perk-dot"></div><div class="perk-text">Website live in as little as 1 week</div></div>
+        <div class="perk"><div class="perk-dot"></div><div class="perk-text">No agency fees — direct, transparent pricing</div></div>
+        <div class="perk"><div class="perk-dot"></div><div class="perk-text">Ongoing support included in every plan</div></div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="booking-form">
+        <div class="form-row">
+          <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full name"/></div>
+          <div class="form-group"><label>Business Name</label><input type="text" placeholder="Your business"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@business.com"/></div>
+        </div>
+        <div class="form-group"><label>Service Needed</label><select><option value="">Select a service...</option><option>Website Design &amp; Development</option><option>Online Ordering System</option><option>Website Maintenance</option><option>Firebase Integration</option><option>Franchise/Business Website</option><option>Hosting &amp; Deployment</option><option>Full Digital Solution</option></select></div>
+        <div class="form-group"><label>Preferred Time</label><select><option value="">Choose a time slot...</option><option>Morning (9 AM – 12 PM)</option><option>Afternoon (12 PM – 3 PM)</option><option>Evening (3 PM – 6 PM)</option><option>Flexible / Anytime</option></select></div>
+        <div class="form-group"><label>Tell Us About Your Project</label><textarea placeholder="Brief description of your business and what you're looking to build..."></textarea></div>
+        <button class="btn-submit" onclick="handleSubmit(event)">Book Your Free Call ↗</button>
+        <p class="form-note">We'll reach out within 2 hours on WhatsApp or email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio" id="portfolio">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;"><span class="section-label">Our Work</span><h2 class="section-title">Projects we're<br><em>proud of.</em></h2></div>
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+  </div>
+</section>
+
+<section id="contact" style="background:var(--deep);">
+  <div class="contact-inner">
+    <div class="reveal">
+      <span class="section-label">Get In Touch</span>
+      <h2 class="section-title">Ready to get<br>your business<br><em>online?</em></h2>
+      <p class="section-sub" style="margin-top:16px;">Reach us through any of the channels below. We respond within 2 hours on WhatsApp and within the same day on email.</p>
+      <div class="contact-channels">
+        <a href="mailto:hello@brewniq.com" class="channel"><div class="ch-icon">✉</div><div class="ch-info"><div class="ch-label">Email</div><div class="ch-val">hello@brewniq.com</div></div></a>
+        <a href="https://instagram.com/brewniq" class="channel" target="_blank"><div class="ch-icon">◈</div><div class="ch-info"><div class="ch-label">Instagram</div><div class="ch-val">@brewniq</div></div></a>
+        <a href="https://wa.me/919999999999" class="channel" target="_blank"><div class="ch-icon">◉</div><div class="ch-info"><div class="ch-label">WhatsApp</div><div class="ch-val">DM to start a conversation</div></div></a>
+      </div>
+    </div>
+    <div class="contact-map reveal reveal-delay-2">
+      <div class="map-grid"></div><div class="map-dot"></div>
+      <div class="map-label">Based in</div>
+      <div class="map-city">Hyderabad, India</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand"><a href="#" class="nav-logo">BREW<span>N</span>IQ</a><p>A premium web design and development agency helping businesses grow their digital presence — one website at a time.</p></div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Website Design</a></li><li><a href="#services">Development</a></li><li><a href="#services">Maintenance</a></li><li><a href="#services">Firebase Integration</a></li><li><a href="#services">Online Ordering</a></li><li><a href="#services">Hosting &amp; Deployment</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#about">About Us</a></li><li><a href="#portfolio">Our Work</a></li><li><a href="#booking">Book a Call</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li><a href="https://instagram.com/brewniq">Instagram</a></li><li><a href="mailto:hello@brewniq.com">Email</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">LinkedIn</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 <span class="gold">Brewniq</span>. All rights reserved.</p><p>Built with precision in Hyderabad 🖤</p></div>
+</footer>
+
+<button class="editor-fab" onclick="openEditor()" title="Edit Projects">✏️</button>
+
+<div class="editor-overlay" id="editorOverlay">
+  <div class="editor-modal">
+    <div class="editor-header"><h3>Project Editor</h3><button class="editor-close" onclick="closeEditor()">✕</button></div>
+    <div class="editor-tabs">
+      <button class="etab active" onclick="switchTab('add')">＋ Add Project</button>
+      <button class="etab" onclick="switchTab('manage')">Manage Projects</button>
+    </div>
+    <div class="tab-content active" id="tab-add">
+      <div class="eform-grid">
+        <div class="eform-group"><label>Project Name *</label><input type="text" id="f-name" placeholder="e.g. The Black Carafe"/></div>
+        <div class="eform-group"><label>Category Tag *</label><input type="text" id="f-tag" placeholder="e.g. Cafe &amp; Dining"/></div>
+        <div class="eform-group eform-full"><label>Short Description *</label><textarea id="f-desc" placeholder="Brief description of the project..."></textarea></div>
+        <div class="eform-group"><label>Live Website URL</label><input type="url" id="f-url" placeholder="https://yourclient.com"/></div>
+        <div class="eform-group"><label>Emoji Icon</label><input type="text" id="f-icon" placeholder="e.g. ☕  🛍  🏢  ✂️  🚀"/></div>
+        <div class="eform-group"><label>Card Accent Color</label>
+          <select id="f-color">
+            <option value="cafe">Warm Brown</option><option value="ecom">Deep Blue</option>
+            <option value="agency">Deep Purple</option><option value="salon">Amber</option>
+            <option value="startup">Teal Green</option><option value="resto">Deep Red</option>
+          </select>
+        </div>
+        <div class="eform-group eform-full"><label>Tech Stack (comma separated)</label><input type="text" id="f-stack" placeholder="e.g. Next.js, Firebase, Razorpay"/></div>
+      </div>
+      <div style="margin-top:8px;">
+        <button class="btn-add" id="saveBtn" onclick="saveProject()">Save Project</button>
+        <button class="btn-cancel-edit" id="cancelEditBtn" style="display:none;" onclick="cancelEdit()">Cancel Edit</button>
+      </div>
+      <p class="editor-note">💡 Projects save in your browser's local storage and appear live on the page instantly. They persist across sessions. Click the ✏️ button anytime to add, edit, or remove projects.</p>
+    </div>
+    <div class="tab-content" id="tab-manage"><div class="elist" id="editorList"></div></div>
+  </div>
+</div>
+
+<script>
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>50));
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');}
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+function handleSubmit(e){e.preventDefault();const b=e.target;b.textContent='✓ Booking Received!';b.style.background='#2a6a2a';b.style.color='#fff';setTimeout(()=>{b.textContent='Book Your Free Call ↗';b.style.background='';b.style.color='';},4000);}
+const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{let c='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)c=s.id;});navLinks.forEach(a=>a.style.color=a.getAttribute('href')==='#'+c?'var(--gold)':'');});
+const COLORS={cafe:'background:linear-gradient(135deg,#0d0a06 0%,#1e1608 50%,#0d0a06 100%);',ecom:'background:linear-gradient(135deg,#050d12 0%,#0c1e28 50%,#050d12 100%);',agency:'background:linear-gradient(135deg,#0a050d 0%,#180c22 50%,#0a050d 100%);',salon:'background:linear-gradient(135deg,#0d0a06 0%,#221808 50%,#0d0a06 100%);',startup:'background:linear-gradient(135deg,#050d0a 0%,#0c2218 50%,#050d0a 100%);',resto:'background:linear-gradient(135deg,#0d0808 0%,#220c0c 50%,#0d0808 100%);'};
+let editingId=null;
+function getProjects(){try{return JSON.parse(localStorage.getItem('brewniq_projects')||'[]');}catch(e){return[];}}
+function saveProjects(a){localStorage.setItem('brewniq_projects',JSON.stringify(a));}
+function renderPortfolio(){
+  const grid=document.getElementById('portfolioGrid'),projects=getProjects();
+  if(!projects.length){grid.innerHTML='<div class="portfolio-empty"><span class="e-icon">🖼</span><p>No projects added yet.</p><a href="#" onclick="openEditor();return false;">Add your first project ↗</a></div>';return;}
+  grid.innerHTML=projects.map((p,i)=>{
+    const stacks=(p.stack||'').split(',').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="stack-tag">${s}</span>`).join('');
+    const link=p.url?`<a href="${p.url}" target="_blank" class="proj-link">View Live ↗</a>`:'';
+    const d=i%3===1?' reveal-delay-1':i%3===2?' reveal-delay-2':'';
+    return `<div class="proj-card reveal${d}"><div class="proj-img" style="${COLORS[p.color]||COLORS.cafe}color:rgba(200,164,90,0.5);"><div class="proj-overlay"></div><div class="proj-img-inner"><span class="proj-img-icon">${p.icon||'🌐'}</span><span style="font-size:13px;letter-spacing:2px;">${(p.tag||'').toUpperCase()}</span></div></div><div class="proj-body"><span class="proj-tag">${p.tag||''}</span><div class="proj-name">${p.name||''}</div><div class="proj-desc">${p.desc||''}</div>${link}${stacks?`<div class="proj-stack">${stacks}</div>`:''}</div></div>`;
+  }).join('');
+  grid.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+}
+function renderEditorList(){
+  const list=document.getElementById('editorList'),projects=getProjects();
+  if(!projects.length){list.innerHTML='<div class="no-projects-msg">No projects yet. Add one from the "Add Project" tab.</div>';return;}
+  list.innerHTML=projects.map((p,i)=>`<div class="eitem"><div class="eitem-icon">${p.icon||'🌐'}</div><div class="eitem-info"><div class="eitem-name">${p.name}</div><div class="eitem-tag">${p.tag}</div></div><div class="eitem-actions"><button class="btn-edit-proj" onclick="editProject(${i})">✏</button><button class="btn-del-proj" onclick="deleteProject(${i})">✕</button></div></div>`).join('');
+}
+function saveProject(){
+  const name=document.getElementById('f-name').value.trim(),tag=document.getElementById('f-tag').value.trim(),desc=document.getElementById('f-desc').value.trim();
+  if(!name||!tag||!desc){alert('Please fill in Name, Category, and Description.');return;}
+  const proj={name,tag,desc,url:document.getElementById('f-url').value.trim(),icon:document.getElementById('f-icon').value.trim()||'🌐',color:document.getElementById('f-color').value,stack:document.getElementById('f-stack').value.trim()};
+  const projects=getProjects();
+  if(editingId!==null){projects[editingId]=proj;editingId=null;}else projects.push(proj);
+  saveProjects(projects);clearForm();renderPortfolio();renderEditorList();
+  document.getElementById('cancelEditBtn').style.display='none';
+  const btn=document.getElementById('saveBtn');btn.textContent='✓ Saved!';setTimeout(()=>btn.textContent='Save Project',2000);
+}
+function editProject(i){
+  const p=getProjects()[i];
+  document.getElementById('f-name').value=p.name||'';document.getElementById('f-tag').value=p.tag||'';document.getElementById('f-desc').value=p.desc||'';document.getElementById('f-url').value=p.url||'';document.getElementById('f-icon').value=p.icon||'';document.getElementById('f-color').value=p.color||'cafe';document.getElementById('f-stack').value=p.stack||'';
+  editingId=i;document.getElementById('saveBtn').textContent='Update Project';document.getElementById('cancelEditBtn').style.display='inline-block';switchTab('add');
+}
+function cancelEdit(){editingId=null;clearForm();document.getElementById('saveBtn').textContent='Save Project';document.getElementById('cancelEditBtn').style.display='none';}
+function deleteProject(i){if(!confirm('Delete this project?'))return;const p=getProjects();p.splice(i,1);saveProjects(p);renderPortfolio();renderEditorList();}
+function clearForm(){['f-name','f-tag','f-desc','f-url','f-icon','f-stack'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-color').value='cafe';}
+function openEditor(){document.getElementById('editorOverlay').classList.add('open');renderEditorList();}
+function closeEditor(){document.getElementById('editorOverlay').classList.remove('open');}
+document.getElementById('editorOverlay').addEventListener('click',function(e){if(e.target===this)closeEditor();});
+function switchTab(tab){
+  document.querySelectorAll('.etab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='add'?0:1)));
+  document.getElementById('tab-add').classList.toggle('active',tab==='add');
+  document.getElementById('tab-manage').classList.toggle('active',tab==='manage');
+  if(tab==='manage')renderEditorList();
+}
+renderPortfolio();
+</script>
+</body>
+</html>
